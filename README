@@ -1,0 +1,37 @@
+Formatic is a form automation library for CodeIgniter that can generate re-usuable form controls
+and associated validation logic with the minimum of fuss. Formatic is extensible via plugins:
+
+Field options: Populates a form control with existing data (for example, from a model function)
+Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
+Field callbacks: Apply a custom validation routine to a form control
+Display widget: Intelligent view partial for the form control value (e.g. render a Googlemap)
+
+Form controls and validation rules are described using configuration files, and groups of fields can be
+tagged for reuse throughout an application. Plugins have global configuration settings which can be
+overridden at the field level. All form controls make use of individual templates (view partials) or inherit
+from a default, so you can achieve precisely the markup desired for your form.
+
+Included plugins:
+
+* Googlemap
+* TinyMCE
+* Related
+* Related Model
+* Alternate multiselect
+* Chained multiselect
+* Compact multiselect
+* Captcha
+* Recaptcha
+* jSlider
+* Number format
+* Datepicker
+* Check date
+
+In addition to the above, file uploads and file validation are available out of the box.
+
+Third party dependencies:
+Carabiner (for asset management, can be replaced with your own preferred library)
+http://codeigniter.com/forums/viewthread/117966/
+
+CI's core form_validation library
+CI's core parser library
