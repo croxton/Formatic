@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="wpf_generator.Views.MergeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="90" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="90" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="26" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="34" />
+            </Grid.RowDefinitions>
+            <TextBlock Text="Input Folder:" VerticalAlignment="Center" />
+            <TextBox Margin="2" Grid.Column="1" Text="{Binding Model.InputFolder}" />
+            <Button Content="Browse" Grid.Column="2" Margin="2" Command="{Binding Model.BrowseCommand}" />
+
+            <ListView ItemsSource="{Binding Model.Files}" Grid.Row="1" Margin="8" Grid.ColumnSpan="3">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Filename}" FontSize="14" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+            <TextBlock Text="Output File:" Grid.Row="2" VerticalAlignment="Center" />
+            <TextBox Margin="2" Grid.Column="1" Grid.Row="2" Text="{Binding Model.OutputFile}" />
+            <Button Content="Browse" Grid.Column="2" Grid.Row="2" Margin="2" Command="{Binding Model.BrowseOutputFileCommand}" />
+
+            <CheckBox x:Name="MergeAddLicense" Grid.Row="3" Grid.ColumnSpan="3" Content="Add License Info" IsChecked="{Binding Model.AddLicense}" />
+
+            <Button Content="Merge" Grid.Row="4" Grid.ColumnSpan="3" Margin="5"  x:Name="Merge" HorizontalAlignment="Right" Command="{Binding Model.MergeCommand}" />
+        </Grid>
+    </Grid>
+</UserControl>

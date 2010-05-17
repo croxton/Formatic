@@ -1,0 +1,152 @@
+table.jCalendar {
+	border: 1px solid #6F7C8B;
+	background: white;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+table.jCalendar th {
+	background: #29363E;
+	color: #fff;
+	font-weight: bold;
+	padding: 3px 5px;
+}
+
+table.jCalendar td {
+	background: #D6EFFF;
+	color: #29363E;
+	padding: 3px 5px;
+	text-align: center;
+}
+table.jCalendar td.other-month {
+	background: #BAD5ED;
+	color: #86A8CC;
+}
+table.jCalendar td.today {
+	background: #1E79C4;
+	color: #fff;
+}
+table.jCalendar td.selected {
+	background: #DF3B84;
+	color: #fff;
+}
+table.jCalendar td.selected.dp-hover {
+	background: #fff;
+	color: #29363E;
+}
+table.jCalendar td.dp-hover,
+table.jCalendar tr.activeWeekHover td {
+	background: #fff;
+	color: #29363E;
+}
+table.jCalendar tr.selectedWeek td {
+	background: #f66;
+	color: #fff;
+}
+table.jCalendar td.disabled, table.jCalendar td.disabled.dp-hover {
+	background: #BAD5ED;
+	color: #86A8CC;
+}
+table.jCalendar td.unselectable,
+table.jCalendar td.unselectable:hover,
+table.jCalendar td.unselectable.dp-hover {
+	background: #bbb;
+	color: #86A8CC;
+}
+
+/* For the popup */
+
+/* NOTE - you will probably want to style a.dp-choose-date - see how I did it in demo.css */
+
+div.dp-popup {
+	position: relative;
+	background: #DADFE5;
+	font-size: 10px;
+	font-family: arial, sans-serif;
+	padding: 2px;
+	line-height: 1.2em;
+	border: 1px solid #BCC5CF;
+}
+div#dp-popup {
+	position: absolute;
+	z-index: 199;
+}
+div.dp-popup h2 {
+	font-size: 12px;
+	text-align: center;
+	margin: 2px 0;
+	padding: 0;
+	font-weight: bold;
+}
+a#dp-close {
+	font-size: 11px;
+	padding: 4px 0;
+	text-align: center;
+	display: block;
+}
+a#dp-close:hover {
+	text-decoration: underline;
+}
+div.dp-popup a {
+	color: #29363E;
+	text-decoration: none;
+	padding: 3px 2px 0;
+}
+div.dp-popup div.dp-nav-prev {
+	position: absolute;
+	top: 2px;
+	left: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-prev a {
+	float: left;
+}
+/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
+div.dp-popup div.dp-nav-prev a, div.dp-popup div.dp-nav-next a {
+	cursor: pointer;
+}
+div.dp-popup div.dp-nav-prev a.disabled, div.dp-popup div.dp-nav-next a.disabled {
+	cursor: default;
+}
+div.dp-popup div.dp-nav-next {
+	position: absolute;
+	top: 2px;
+	right: 4px;
+	width: 100px;
+}
+div.dp-popup div.dp-nav-next a {
+	float: right;
+}
+div.dp-popup a.disabled {
+	cursor: default;
+	color: #aaa;
+}
+div.dp-popup td {
+	cursor: pointer;
+}
+div.dp-popup td.disabled {
+	cursor: default;
+}
+
+a.dp-choose-date {
+	position: absolute;
+	top:19px;
+	right:0;
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	margin: 2px 3px 0;
+	display: block;
+	text-indent: -2000px;
+	overflow: hidden;
+	background: url('/_assets/img/calendar.png') no-repeat; 
+}
+a.dp-choose-date.dp-disabled {
+	background-position: 0 -20px;
+	cursor: default;
+}
+/* makes the input field shorter once the date picker code
+ * has run (to allow space for the calendar icon)
+ */
+input.dp-applied {
+
+}

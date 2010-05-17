@@ -1,0 +1,39 @@
+.googlemap {
+	width : 98%;
+	margin-bottom: 1.5em;
+	overflow: hidden;
+}
+
+div.googlemap-address-lookup {
+	min-height: 1px;
+}
+
+
+div.googlemap-address-lookup label {
+	font-weight : bold;
+	float: left;
+	width: 86%;
+}
+
+div.googlemap-address-lookup input {
+	width: 100% ! important;
+}
+
+div.googlemap-address-lookup button {
+	float: right;
+	margin-top: 18px;
+}
+
+input.googlemap-address-input {
+	margin-right : 10px;
+	width : 200px;
+}
+
+/* float clear fix for wrapping elements */
+div.googlemap-address-lookup:after {
+    content: " "; 
+    display: block; 
+    height: 0; 
+    clear: both; 
+    visibility: hidden;
+	}	

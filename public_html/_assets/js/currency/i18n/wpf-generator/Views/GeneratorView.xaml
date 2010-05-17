@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="wpf_generator.Views.GeneratorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="128" />
+            <ColumnDefinition Width="350*" />
+            <ColumnDefinition Width="90" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="26" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="38" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="Output Folder:" VerticalAlignment="Center" Height="15.96" Margin="0,0,38,0" />
+        <TextBox Margin="92,2,2,2" Grid.ColumnSpan="2" Text="{Binding Model.OutputFolder}" />
+        <Button Content="Browse" Grid.Column="2" Margin="2" x:Name="Browse" Command="{Binding Model.BrowseCommand}" />
+        <ListView ItemsSource="{Binding Model.Cultures.View}" Grid.Row="1" Margin="8" Grid.ColumnSpan="3">
+            <ListView.Resources>
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Command" Value="{Binding Model.SortCommand}" />
+                    <Setter Property="CommandParameter" Value="{Binding Path=Content, Mode=OneWay, RelativeSource={x:Static RelativeSource.Self}}" />
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Country" Width="340">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsSelected}" Content="{Binding Country}" FontSize="14" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Width="140" Header="Code" DisplayMemberBinding="{Binding Code}" />
+                    <GridViewColumn Width="140" Header="Currency" DisplayMemberBinding="{Binding Currency}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="2" Margin="10,0,0,0" >
+            <CheckBox x:Name="SelectAll" Content="Select All" IsChecked="{Binding Model.SelectAll}" />
+            <CheckBox x:Name="AddLicense" Content="Add License Info" IsChecked="{Binding Model.ShouldAppendLicense}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right"  >
+            <Button Content="To Wiki List" Command="{Binding Model.ToListCommand}" Margin="5"/>
+            <Button Content="Run" Command="{Binding Model.RunCommand}" Margin="5" Padding="10,0,10,0" FontSize="16"  />
+        </StackPanel>
+    </Grid>
+</UserControl>

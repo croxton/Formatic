@@ -1,0 +1,19 @@
+﻿<Window x:Class="wpf_generator.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:wpf_generator.ViewModels"
+    xmlns:v="clr-namespace:wpf_generator.Views"
+    Title="FormatCurrency i18n Generator" Height="550" Width="720" Background="Azure">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:GeneratorViewModel}">
+            <v:GeneratorView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:MergeViewModel}">
+            <v:MergeView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LicenseViewModel}">
+            <v:LicenseView />
+        </DataTemplate>
+    </Window.Resources>
+    <TabControl Margin="10" ItemsSource="{Binding Model.TabViews}" SelectedItem="{Binding Model.SelectedTab}" />
+</Window>

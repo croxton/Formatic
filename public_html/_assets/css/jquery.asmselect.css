@@ -1,0 +1,71 @@
+.asmContainer {
+	/* container that surrounds entire asmSelect widget */
+}
+
+.asmSelect {
+	/* the newly created regular 'select' */
+	width: 100% ! important;
+	margin-bottom: 12px;
+}
+
+.asmOptionDisabled {
+	/* disabled options in new select */
+	color: #999; 
+}
+
+.asmHighlight {
+	/* the highlight span */
+	padding: 0;
+	margin: 0 0 0 1em;
+	display: none;
+}
+
+.asmList {
+	/* html list that contains selected items */
+	margin: 0; 
+	position: relative;
+	display: block;
+	padding-left: 0; 
+	list-style: none; 
+}
+
+.asmListItem {
+	/* li item from the html list above */
+	position: relative; 
+	margin-left: 0 ! important;
+	padding: 0;
+	list-style: none;
+	background: white url('/_assets/img/asmselect_bg.jpg') 0 -100px repeat-x;
+	border: 1px solid #D6E3E5; 
+	border-width: 1px 0 1px 0;
+	width: 100%; 
+	margin: 0 0 -1px 0; 
+	line-height: 1.25em;
+}
+
+.asmListItem:hover {
+	background-position: 0 0;
+}
+
+.asmListItemLabel {
+	/* this is a span that surrounds the text in the item, except for the remove link */
+	padding: 7px 38px 0 32px; 
+	display: block;
+	background: transparent url('/_assets/img/asmselect_grab.png') 10px 10px no-repeat;
+	color: #384E59;
+}
+
+.asmListSortable .asmListItemLabel {
+	cursor: move; 
+}
+
+.asmListItemRemove {
+	/* the remove link in each list item */
+	position: absolute;
+	right: 10px; 
+	top: 7px;
+	width: 14px;
+	height: 14px;
+	background: transparent url('/_assets/img/btn/delete_checked.png') 0 0 no-repeat;
+	text-indent: -500em;
+}
