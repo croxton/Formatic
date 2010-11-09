@@ -1,5 +1,22 @@
+v1.1.0
+------
+* Removed dependency on Carabiner. 
+* New abstract asset bridge class for bridging Formatic with asset libraries (Carabiner and Stuff libraries are included)
+* Moved plugins and field configuration to standalone 'Formatic' directory, following the deprecation of plugins in CI2
+* Cleaned up public methods for ease of use in controllers and views
+* CSRF protection for forms
+* Fully tested and production ready
+
+TO DO
+-----
+Documentation!
+
+Description
+-----------
 Formatic is a form automation library for CodeIgniter that can generate re-usuable form controls
-and associated validation logic with the minimum of fuss. Formatic is extensible via plugins:
+and associated validation logic. It allows you to render, validate and repopulate highly complex forms.
+
+Formatic is extensible via plugins:
 
 Field options: Populates a form control with existing data (for example, from a model function)
 Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
@@ -29,10 +46,7 @@ Included plugins:
 
 In addition to the above, file uploads and file validation are available out of the box.
 
-Third party dependencies:
-Carabiner (for asset management, can be replaced with your own preferred library)
-http://codeigniter.com/forums/viewthread/117966/
-
+Dependencies:
 CI's core form_validation library
 CI's core parser library
 jQuery
