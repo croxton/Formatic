@@ -118,7 +118,7 @@ $config['tinymce'] = array(
 | Requires jQuery 1.3.x+
 |--------------------------------------------------------------------------
 */
-$config['googlemap_api_key'] = 'ABQIAAAArlJKklxJBsiyKtpIwi-yIRQpfK9r6QxDOBtXIiegstxtzKrwhxRXFO6EAZyP4NUfnoQG_eFENLjZfw';
+$config['googlemap_api_key'] = 'your-key-here';
 
 $config['googlemap'] = array(
 		
@@ -147,8 +147,8 @@ $config['googlemap'] = array(
 */
 $config['recaptcha'] = array(
 		'css'		  =>  array('recaptcha.css', 'screen'),
-		'public_key'  => '6LcU0ggAAAAAAD1QaTgCcnUfGw5UUpUR8sr_jrf6',
-		'private_key' => '6LcU0ggAAAAAAB3yBvGirPeXeppDEonk-8yuYg2f',
+		'public_key'  => 'your-key-here',
+		'private_key' => 'your-key-here',
 		'use_ssl'	  => true
 		);
 
