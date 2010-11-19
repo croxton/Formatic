@@ -1,1 +1,1 @@
-<label for="{id}"{row_class}>{field}</label>
+<label for="{id}"{row_class}>{field}{error}</label>

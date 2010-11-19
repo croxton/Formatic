@@ -1,3 +1,3 @@
-<label id="{id}">
+<label for="{id}">
 	{control} {option}
 </label>

@@ -127,9 +127,13 @@ div.dp-popup td.disabled {
 	cursor: default;
 }
 
+.datepicker {
+	position: relative;
+}
+
 a.dp-choose-date {
 	position: absolute;
-	top:19px;
+	top:30px;
 	right:0;
 	width: 16px;
 	height: 16px;
@@ -138,7 +142,7 @@ a.dp-choose-date {
 	display: block;
 	text-indent: -2000px;
 	overflow: hidden;
-	background: url('/_assets/img/calendar.png') no-repeat; 
+	background: url('/_assets/img/icons/calendar.png') no-repeat; 
 }
 a.dp-choose-date.dp-disabled {
 	background-position: 0 -20px;

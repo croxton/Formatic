@@ -57,13 +57,15 @@ class Formatic_stuff_bridge extends Formatic_asset_bridge {
 			foreach($assets as $asset){	
 				$dev_file 	= $asset[0];
 				$group 		= (isset($asset[1])) ? $asset[1] : 'main';
-				Stuff::js($dev_file, $group);
+				// Stuff encodes ampersands as entities, so lets replace them here
+				$dev_file = str_replace('&amp;', '&', $dev_file);
+				Stuff::js($dev_file, array(), $group);
 			}
 		}
 		else
 		{
 			// string
-			Stuff::js($file, group);
+			Stuff::js($file, array(), $group);
 		}
 	}
 	
@@ -93,13 +95,13 @@ class Formatic_stuff_bridge extends Formatic_asset_bridge {
 			foreach($assets as $asset){
 				$dev_file 	= $asset[0];
 				$group 		= (isset($asset[2])) ? $asset[2] : 'main';
-				Stuff::css($dev_file, $group);
+				Stuff::css($dev_file, array(), $group);
 			}
 		}
 		else
 		{
 			// string
-			Stuff::css($file, $group);
+			Stuff::css($file, array(), $group);
 		}
 	}	
 }

@@ -25,16 +25,16 @@ class Fm_captcha extends Formatic_plugin {
 	{
 		$formatic =& $this->CI->formatic;
 	
-		$formatic->load->plugin('captcha');
+		$formatic->load->helper('captcha');
 	
 		$config = array_merge(
-			$formatic->get_plugin_config('recaptcha'), 
+			$formatic->get_plugin_config('fm_captcha'), 
 			$formatic->get_field_config($f)
 		);
 
 		$cap = create_captcha(array(
 			'img_path'		=> './'.$config['captcha_path'],
-			'img_url'		=> base_url().$config['captcha_path'],
+			'img_url'		=> $config['captcha_path'],
 			'font_path'		=> './'.$config['captcha_fonts_path'],
 			'font_size'		=> $config['captcha_font_size'],
 			'img_width'		=> $config['captcha_width'],

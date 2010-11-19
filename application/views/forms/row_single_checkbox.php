@@ -1,1 +1,1 @@
-<label>{field}</label>
+<label>{field}{error}</label>

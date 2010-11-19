@@ -1,0 +1,126 @@
+body {
+	background-color: #fff;
+	margin: 40px;
+	font-family: Lucida Grande, Verdana, Sans-serif;
+	font-size: 14px;
+	color: #4F5155;
+	}
+	
+a, a:link 			{ color: #1E79C4; text-decoration: none; }
+a:visited 			{ color: #1E79C4; }	
+a:focus, a:hover 	{ color: #2E5A8A;}
+a:active 			{ color: #29363E; }
+
+legend {
+	display: block;
+	color: #444;
+	background-color: transparent;
+	font-size: 16px;
+	font-weight: bold;
+	}
+
+fieldset {
+	width: 472px;
+	border: 1px solid #B3B4BD;
+	background: #F7FAFC;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	padding: 0 15px 15px 15px;
+	}
+
+label {
+	display: block;
+	line-height: 2em;
+	margin-top: 1em;
+	}
+
+.radio label {
+	display: inline;
+	}
+	
+.checkbox label {
+	margin:0;
+	}
+
+input.txt, textarea.txt {
+	font-size: 14px;
+	color: #333;
+	border: 1px solid #C3CBD0;
+	width: 100%;
+	padding: 3px;
+	margin: 0;
+	display: block;
+	}
+	
+input.txt:focus, textarea.txt:focus {	
+	background: #FFFFDF;
+	border-color: #8897A0;
+	}
+
+select.txt {
+	font-size: 14px;
+	font-weight: normal;
+	display: block;
+	}
+	
+.btn {
+	width: auto;
+	font-size: 18px;
+	margin-top: 1em;
+	padding: 4px 10px 5px 10px;
+	background: #1090F5;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	}
+	
+.btn:focus, .btn:hover {
+	background: #1E79C4;
+	}
+	
+.message {
+	padding: 10px;
+	margin-top: 1em;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	}
+
+.message h3 {
+	font-size: 16px;
+	margin:0 0 1em 0;
+	}
+
+.message ul {
+	margin: 0 0 1em 0;
+	}
+	
+.message ul li {
+	margin:0;
+	padding:0;
+	}
+
+.error {
+	color: #B53825;
+	}
+	
+div.error {
+	background: #FFD3D2;
+	}
+	
+.error .icon {
+	padding-left: 20px;
+	background: transparent url('/_assets/img/icons/error.png') 0 2px no-repeat;
+	}
+.error ul li {
+	color: #4E2C2C;
+	}
+	
+.error-inline {
+	display: block;
+	color: #B53825;
+	font-size: 12px;
+}

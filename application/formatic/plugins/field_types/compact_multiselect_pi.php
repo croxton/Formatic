@@ -31,7 +31,7 @@ class Compact_multiselect extends Formatic_plugin {
 		$js ='';
 	
 		$config = array_merge(
-			$formatic->get_plugin_config('Compact_multiselect'), 
+			$formatic->get_plugin_config('compact_multiselect'), 
 			$formatic->get_field_config($f)
 		);
 		

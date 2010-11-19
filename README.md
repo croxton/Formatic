@@ -1,21 +1,16 @@
-v1.1.0
-------
-* Removed dependency on Carabiner. 
-* New abstract asset bridge class for bridging Formatic with asset libraries (Carabiner and Stuff libraries are included)
-* Moved plugins and field configuration to standalone 'Formatic' directory, following the deprecation of plugins in CI2
-* Cleaned up public methods for ease of use in controllers and views
-* CSRF protection for forms
-* Fully tested and production ready
+#Formatic
 
-TO DO
------
-Documentation!
+version 1.1.1
 
-Description
------------
+* Author: [Mark Croxton](http://hallmark-design.co.uk/)
+
+
+## Description
+
 Formatic is a form automation library for CodeIgniter that can generate re-usuable form controls
 and associated validation logic. It allows you to render, validate and repopulate highly complex forms.
 
+## Formatic plugins
 Formatic is extensible via plugins:
 
 Field options: Populates a form control with existing data (for example, from a model function)
@@ -46,7 +41,15 @@ Included plugins:
 
 In addition to the above, file uploads and file validation are available out of the box.
 
-Dependencies:
-CI's core form_validation library
-CI's core parser library
-jQuery
+## Installation
+1. Copy the 3 library files, config files, example controller, example model, view files, helpers and language file to their respective folders inside ./application
+2. Copy the formatic folder to your ./application directory
+3. Copy the _assets and captcha folders to your public web root
+4. Add the library to the $autoload['libraries'] array in ./application/config/autoload.php
+5. Install and configure an asset manager: [Carabiner](https://github.com/tonydewan/Carabiner) or [Stuff](https://github.com/dhorrigan/codeigniter-stuff) are supported. Working config files are included for both asset managers, assuming you haven't changed the paths.
+
+## Configuration
+Open up config/formatic.php and configure system paths, image and file upload paths and API keys for the Googlemaps and Recaptcha plugins etc, if you intend to use them.
+
+## Usage
+To do.

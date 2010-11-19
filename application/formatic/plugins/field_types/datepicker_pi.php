@@ -31,7 +31,7 @@ class Datepicker extends Formatic_plugin {
 		$js ='';
 	
 		$config = array_merge(
-			$formatic->get_plugin_config(__CLASS__), 
+			$formatic->get_plugin_config('datepicker'), 
 			$formatic->get_field_config($f)
 		);
 		
@@ -44,13 +44,17 @@ class Datepicker extends Formatic_plugin {
 		$data = isset($config['attr']) ? $data + $config['attr'] : $data;
 		$r = call_user_func('form_input', $data);
 		
-		$config['startDate'] = isset($config['startDate']) ? $config['startDate'] : '01/01/1750';
+		$config['startDate'] 		= isset($config['startDate']) 		? $config['startDate'] 		: '01/01/1750';
+		$config['firstDayOfWeek']	= isset($config['firstDayOfWeek'])  ? $config['firstDayOfWeek'] : '0';
+		$config['format']	 		= isset($config['format'])    		? $config['format']    		: 'dd/mm/yyyy';
 		
 		// add the js call
 		$js = <<<JAVASCRIPT
 		<script type="text/javascript">
 		//<![CDATA[ 
 			$(function() {
+				Date.firstDayOfWeek = {$config['firstDayOfWeek']};
+				Date.format = '{$config['format']}';
 				$('#{$config['id']}').datePicker({
 					startDate:'{$config['startDate']}'
 				});

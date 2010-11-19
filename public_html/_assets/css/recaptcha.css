@@ -1,0 +1,19 @@
+.recaptcha {
+	position: relative;
+	clear: both;
+	background: white;
+	padding: 20px 20px 15px 20px;
+	margin: 2em 0 1em 0;
+	border: 1px solid #C3CBD0;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	}
+.recaptcha label {
+	margin-top: 1em;
+	padding-bottom:0;
+	}
+.recaptcha_only_if_image, .recaptcha_only_if_audio {
+	clear: both;
+	display: inline;
+	}

@@ -14,7 +14,7 @@ $CI->load->library('form_validation');
  * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
  * @author  	Mark Croxton
- * @version 	1.1.0 (9 November 2010)
+ * @version 	1.1.1 (19 November 2010)
  */
 
 class Formatic extends CI_Form_validation {
@@ -30,7 +30,8 @@ class Formatic extends CI_Form_validation {
 	function __construct($rules = array())
 	{
 		// call the parent class constructor
-		parent::CI_Form_validation($rules);
+		#parent::CI_Form_validation($rules);
+		parent::__construct($rules);
 		
 		// load & assign libraries
 		$this->_load_libraries();
@@ -117,6 +118,7 @@ class Formatic extends CI_Form_validation {
 		{
 			// load required libraries
 			$CI->load->library('parser');
+			$CI->load->library('session');
 
 			// assign loaded libraries
 			$this->parser = $CI->parser;
@@ -124,7 +126,7 @@ class Formatic extends CI_Form_validation {
 			// assign system libraries (already loaded)
 			$this->lang = $CI->lang;
 			$this->load = $CI->load;
-			$this->db = $CI->db;
+			#$this->db = $CI->db;
 			$this->config = $CI->config;
 			
 			// assign a reference to the super object
@@ -452,8 +454,12 @@ class Formatic extends CI_Form_validation {
 		// default options row template - don't load unless needed!
 		$tpl_row_options = '';
 		
-		// load default outer options template
-		$tpl_outer_options = $this->load->view($this->formatic_prefs->outer_options_tpl, '', TRUE);
+		// load default outer radio and checkbox templates
+		$tpl_outer_radio 	= $this->load->view($this->formatic_prefs->outer_radio_tpl, '', TRUE);
+		$tpl_outer_checkbox = $this->load->view($this->formatic_prefs->outer_checkbox_tpl, '', TRUE);
+		
+		// load inline error template
+		$tpl_inline_error = $this->load->view($this->formatic_prefs->inline_error_tpl, '', TRUE);
 		
 		// get groups
 		if ($groups !== '')
@@ -508,7 +514,6 @@ class Formatic extends CI_Form_validation {
 			}
 			
 			// add the field config to the formatic prefs master array
-			//$this->formatic_prefs->{'_field_'.$f} = $v;
 			$this->set_field_config($f, $v);
 
 			switch ($v['type'])
@@ -596,12 +601,16 @@ class Formatic extends CI_Form_validation {
 						// load options plugin if $options is a string
 						$options = @is_array($v['options']) ? $v['options'] : $this->load_field_plugin('option', $v['options']);
 						
-						//$name = count($options)>1 && $v['type'] === 'checkbox' ? $f.'[]' : $f;
-						
 						// count for appending to id value for each option
 						$count = 1;
 						
-						foreach($options as $option => $value)
+						// are we enforcing a consistent options format?
+						if (!$this->formatic_prefs->consistent_options)
+						{
+							$options = array_flip($options);
+						}
+						
+						foreach($options as $value => $option)
 						{	
 							$row ='';
 							
@@ -650,7 +659,11 @@ class Formatic extends CI_Form_validation {
 							$data = isset($v['attr']) ? $data+$v['attr'] : $data;
 							
 							// id for each checkbox/radio option
-							$data['id'] =  $v['id'].$count;
+							$data['id'] =  $v['id'];
+							if ($count > 1)
+							{
+								$data['id'] =  $data['id'].$count;
+							}
 							
 							// build the form control
 							$row = call_user_func('form_'.$v['type'], $data);
@@ -714,6 +727,9 @@ class Formatic extends CI_Form_validation {
 			if (strlen($field_html[$f]['error']) > 0)
 			{
 				$field_html[$f]['row_class'] = $this->formatic_prefs->css_error_class.' '.$field_html[$f]['row_class'];
+				
+				// replace error message into error row template
+				$field_html[$f]['error'] = str_replace('{error}', $field_html[$f]['error'], $tpl_inline_error);
 			}
 			
 			// format row class if we need it
@@ -722,12 +738,23 @@ class Formatic extends CI_Form_validation {
 				$field_html[$f]['row_class'] = ' class="'.$field_html[$f]['row_class'].'"';
 			}
 			
-			if ($v['type'] == 'checkbox' || $v['type'] == 'radio')
+			if ($v['type'] == 'checkbox')
 			{
-				// use outer options template for these field types
-				$tpl = $tpl_outer_options;
+				// use outer checkbox template for these field types
+				$tpl = $tpl_outer_checkbox;
+				
 				// since each option has an id count appended, we want the id to point to first option
 				$field_html[$f]['id'] .= '1';
+				$v['id'] = $field_html[$f]['id'];
+			}
+			elseif ($v['type'] == 'radio')
+			{
+				// use outer radio template for these field types
+				$tpl = $tpl_outer_radio;
+				
+				// since each option has an id count appended, we want the id to point to first option
+				$field_html[$f]['id'] .= '1';
+				$v['id'] = $field_html[$f]['id'];
 			}
 			else
 			{
@@ -766,7 +793,8 @@ class Formatic extends CI_Form_validation {
 					$v['label_id'], 
 					$field_html[$f]['label'], 
 					$field_html[$f]['row_class'], 
-					$field_html[$f]['required']
+					$field_html[$f]['required'],
+					$field_html[$f]['error']
 				);
 			}
 			
@@ -905,7 +933,7 @@ class Formatic extends CI_Form_validation {
 		
 		// map to outer template
 		if ($error_message !== '')
-		{
+		{	
 			$error_message = str_replace('{errors}', $error_message, $tpl_outer);
 		}
 		
@@ -925,10 +953,10 @@ class Formatic extends CI_Form_validation {
 	 * @param string $required Required character.
 	 * @return string
 	 */
-	public function render_row($field='', $tpl = '', $id='', $label_id='', $label='', $row_class='', $required='')
+	public function render_row($field='', $tpl = '', $id='', $label_id='', $label='', $row_class='', $required='', $error='')
 	{
-		$ph = array('{field}', '{id}', '{label_id}', '{label}', '{row_class}', '{required}');
-		$row_data = array($field, $id, $label_id, $label, $row_class, $required);
+		$ph = array('{field}', '{id}', '{label_id}', '{label}', '{row_class}', '{required}', '{error}');
+		$row_data = array($field, $id, $label_id, $label, $row_class, $required, $error);
 		return str_replace($ph,$row_data,$tpl)."\n";
 	}
 
@@ -1300,17 +1328,24 @@ class Formatic extends CI_Form_validation {
 	 * Form
 	 *
 	 * @access	public
-	 * @param   string	config file
+	 * @param   string/array config file or array of fields
 	 * @param   string	field group
 	 * @return	array
 	 */
 	public function form($file, $groups='')
 	{
-		// load form fields
-		$this->load($file);
+		if (!is_array($file))
+		{
+			// load form fields
+			$this->load($file);
 		
-		// get the group of fields or return all fields from file if group is empty
-		$fields = $this->group($groups, $file);
+			// get the group of fields or return all fields from file if group is empty
+			$fields = $this->group($groups, $file);
+		}
+		else
+		{
+			$fields = $file;
+		}
 		
 		// make validation rules
 		$this->make_rules($fields);
@@ -1512,7 +1547,7 @@ class Formatic extends CI_Form_validation {
 	 */
 	public function set_rules($field, $label = '', $rules = '')
     {
-        if(count($_POST)===0 AND count($_FILES) > 0)//it will prevent the form_validation from working
+        if(count($_POST)===0 AND count($_FILES) > 0) // it will prevent the form_validation from working
         {
             //add a dummy $_POST
             $_POST['DUMMY_ITEM'] = '';
@@ -1863,19 +1898,6 @@ class Formatic extends CI_Form_validation {
 		// <-- end adaption from from original class
     }
     
-    
-   /**
-    * Future function. To return error message of choice.
-    * It will use $msg if it cannot find one in the lang files
-    * 
-    * @param string the error message
-    */
-    public function set_error($msg)
-    {
-        $this->lang->load('upload');
-        return ($this->lang->line($msg) == FALSE) ? $msg : $this->lang->line($msg);
-    }
-    
    /**
     * tests to see if a required file is uploaded
     * 
@@ -1885,7 +1907,7 @@ class Formatic extends CI_Form_validation {
     {
         if($file['size']===0)
         {
-            $this->set_message('file_required','Uploading a file for %s is required.');
+			$this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__));
             return FALSE;
         }
         
@@ -1903,7 +1925,8 @@ class Formatic extends CI_Form_validation {
         $max_size_bit = $this->let_to_bit($max_size);
         if($file['size']>$max_size_bit)
         {
-            $this->set_message('file_size_max',"%s is too big. (max allowed is $max_size)");
+			$message = sprintf($this->lang->line(__FUNCTION__), '%s', $max_size);
+            $this->set_message(__FUNCTION__, $message);
             return FALSE;
         }
         return true;
@@ -1920,7 +1943,8 @@ class Formatic extends CI_Form_validation {
         $max_size_bit = $this->let_to_bit($max_size);
         if($file['size']<$min_size_bit)
         {
-            $this->set_message('file_size_min',"%s is too small. (Min allowed is $max_size)");
+			$message = sprintf($this->lang->line(__FUNCTION__), '%s', $max_size);
+            $this->set_message(__FUNCTION__, $message);
             return FALSE;
         }
         return true;
@@ -1969,7 +1993,8 @@ class Formatic extends CI_Form_validation {
         
         if(!in_array($file_ext,$exts))
         {
-            $this->set_message('file_allowed_type',"%s should be one of: ".(strtoupper(implode(', ', $exts))) ).'.';
+			$message = sprintf($this->lang->line(__FUNCTION__), '%s', strtoupper(implode(', ', $exts)) );
+            $this->set_message(__FUNCTION__, $message);
             return false;        
         }
         else
@@ -1983,7 +2008,8 @@ class Formatic extends CI_Form_validation {
         $rc = $this->file_allowed_type($file,$type);
         if(!$rc)
         {
-            $this->set_message('file_disallowed_type',"%s cannot be $type.");
+			$message = sprintf($this->lang->line(__FUNCTION__), '%s', $type);
+            $this->set_message(__FUNCTION__, $message);
         }
 
         return $rc;
@@ -2048,17 +2074,17 @@ class Formatic extends CI_Form_validation {
         
         if(count($dim)!==2)
         {
-            //bad size given
-            $this->set_message('file_image_maxdim','%s has invalid rule expected similar to 150,300 .');
+            // bad size given
+            $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_invalid'));
             return FALSE;
         }
 
-        //get image size
+        // get image size
         $d = $this->get_image_dimension($file['tmp_name']);
         
         if(!$d)
         {
-            $this->set_message('file_image_maxdim','%s dimensions was not detected.');
+            $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_dimensions'));
             return FALSE;        
         }
                 
@@ -2067,7 +2093,7 @@ class Formatic extends CI_Form_validation {
             return TRUE;
         }
     
-        $this->set_message('file_image_maxdim','%s image size is too big.');
+        $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_size'));
         return FALSE;
     }
     
@@ -2084,16 +2110,16 @@ class Formatic extends CI_Form_validation {
         if(count($dim)!==2)
         {
             //bad size given
-            $this->set_message('file_image_mindim','%s has invalid rule expected similar to 150,300 .');
+            $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_invalid'));
             return FALSE;
         }
         
-        //get image size
+        // get image size
         $d = $this->get_image_dimension($file['tmp_name']);
         
         if(!$d)
         {
-            $this->set_message('file_image_mindim','%s dimensions was not detected.');
+            $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_dimensions'));
             return FALSE;        
         }
         
@@ -2102,7 +2128,7 @@ class Formatic extends CI_Form_validation {
             return TRUE;
         }
     
-        $this->set_message('file_image_mindim','%s image size is too big.');
+        $this->set_message(__FUNCTION__, $this->lang->line(__FUNCTION__.'_size'));
         return FALSE;
     }
     

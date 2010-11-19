@@ -8,20 +8,19 @@ div.googlemap-address-lookup {
 	min-height: 1px;
 }
 
-
 div.googlemap-address-lookup label {
-	font-weight : bold;
 	float: left;
-	width: 86%;
+	width: 88%;
+	margin-bottom: 10px;
 }
 
 div.googlemap-address-lookup input {
-	width: 100% ! important;
+	width: 100%;
 }
 
 div.googlemap-address-lookup button {
 	float: right;
-	margin-top: 18px;
+	margin-top: 4em;
 }
 
 input.googlemap-address-input {

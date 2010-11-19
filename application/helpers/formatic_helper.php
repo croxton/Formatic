@@ -103,6 +103,40 @@ if ( ! function_exists('render_row'))
 		return $OBJ->render_row($field, $tpl, $id, $label, $row_class, $required);
 	}
 }
+
+/**
+ * Renders a hidden fields for CSRF prevention
+ * 
+ * @return String.
+ */
+
+if ( ! function_exists('form_token'))
+{
+	function form_token() {
+	    
+		if (FALSE === ($OBJ =& _get_formatic_object()))
+		{
+			return '';
+		}
+    
+	    // Get the token from the csrf class
+	    $tokenArray = $OBJ->get_token();    
+	    if(!$tokenArray) {
+	        // Token is bad. Create a new one
+	        $tokenArray = $OBJ->create_token();    
+	    }
+    
+	    // Return token hidden form field strings
+	    $input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'hidden'));
+	    $input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'hidden'));
+    
+	    // Visible form fields for testing. Should not be used in production
+	    //$input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'input'));
+	    //$input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'input'));
+    
+	    return "\n $input_formID \n $input_token\n";
+	}
+}
 	
 	
 // ------------------------------------------------------------------------
@@ -140,17 +174,6 @@ if ( ! function_exists('_get_formatic_object'))
 		return $CI->$object;
 	}
 }
-
-// ------------------------------------------------------------------------
-// Fieldtypes
-
-
-// ------------------------------------------------------------------------
-// Options
-
-
-
-
 
 /* End of file formatic.php */
 /* Location: ./application/helpers/formatic.php */

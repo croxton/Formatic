@@ -6,6 +6,7 @@
 	/* the newly created regular 'select' */
 	width: 100% ! important;
 	margin-bottom: 12px;
+	font-size: 14px;
 }
 
 .asmOptionDisabled {
@@ -35,7 +36,7 @@
 	margin-left: 0 ! important;
 	padding: 0;
 	list-style: none;
-	background: white url('/_assets/img/asmselect_bg.jpg') 0 -100px repeat-x;
+	background: white url('/_assets/img/asmselect/asmselect_bg.jpg') 0 -100px repeat-x;
 	border: 1px solid #D6E3E5; 
 	border-width: 1px 0 1px 0;
 	width: 100%; 
@@ -51,7 +52,7 @@
 	/* this is a span that surrounds the text in the item, except for the remove link */
 	padding: 7px 38px 0 32px; 
 	display: block;
-	background: transparent url('/_assets/img/asmselect_grab.png') 10px 10px no-repeat;
+	background: transparent url('/_assets/img/asmselect/asmselect_grab.png') 10px 10px no-repeat;
 	color: #384E59;
 }
 
@@ -66,6 +67,6 @@
 	top: 7px;
 	width: 14px;
 	height: 14px;
-	background: transparent url('/_assets/img/btn/delete_checked.png') 0 0 no-repeat;
+	background: transparent url('/_assets/img/icons/delete_checked.png') 0 0 no-repeat;
 	text-indent: -500em;
 }

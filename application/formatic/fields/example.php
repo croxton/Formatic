@@ -8,72 +8,14 @@
 
 $config = array(
 	
-	'office_name' => array(
-		'label'	 	=> 'Office name',
-		'rules'  	=> 'trim|required|min_length[4]|max_length[255]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
-	),	
-	
-	'address1' => array(
-		'label'	 	=> 'Address 1',
-		'rules'  	=> 'trim|required|min_length[4]|max_length[255]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
-	),	
-	
-	'address2' => array(
-		'label'	 	=> 'Address 2',
-		'rules'  	=> 'trim|min_length[4]|max_length[255]|xss_clean',
+	'name' => array(
+		'label'	 	=> 'Name',
+		'rules'  	=> 'required|trim|min_length[4]|max_length[255]|xss_clean',
 		'type'   	=> 'input',
 		'groups'	=> 'edit|add',
 		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
 	),
-	
-	'city' => array(
-		'label'	 	=> 'Town / City',
-		'rules'  	=> 'trim|required|min_length[4]|max_length[255]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
-	),
-	
-	'state' => array(
-		'label'	 	=> 'State / County / Province',
-		'rules'  	=> 'trim|min_length[4]|max_length[255]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
-	),
-	
-	'zip' => array(
-		'label'	 	=> 'Zip / Postcode',
-		'rules'  	=> 'trim|min_length[4]|max_length[255]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
-	),
-	
-	'country_iso' => array(
-		'label'	 	=> 'Country',
-		'rules'  	=> 'alpha|trim|min_length[2]|max_length[2]|xss_clean',
-		'type'   	=> 'select',
-		'options'	=> 'related[countries:iso:country_name]',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'2')
-	),
-	
-	'region_id' => array(
-		'label'	 	=> 'Geographical Region',
-		'rules'  	=> 'integer|required|trim|xss_clean',
-		'type'   	=> 'select',
-		'options'	=> 'related[regions:id:region_name]',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'11' )
-	),
-	
+
 	'timezone' => array(
 		'label'	 	=> 'Time zone (+-GMT)',
 		'rules'  	=> 'required|trim|xss_clean|max_length[3]',
@@ -89,7 +31,7 @@ $config = array(
 					'-5'  => '-5',
 					'-4'  => '-4',
 					'-3'  => '-3',
-					'-3'  => '-2',
+					'-2'  => '-2',
 					'-1'  => '-1',
 					'0'	  => '0',
 					'+1'  => '+1',
@@ -110,7 +52,7 @@ $config = array(
 		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'3' )
 	),
 	
-	'location' => array(
+	'map' => array(
 		'label'	 	=> 'Search for your location',
 		'rules'  	=> 'trim|xss_clean',
 		'type'   	=> 'googlemap',
@@ -121,46 +63,47 @@ $config = array(
 	'show_marker' => array(
 		'label'		=> 'Show map marker?',
 		'rules'  	=> 'alpha|max_length[1]',
-		'options' 	=> array( 'Yes' => 'Y', 'No' => 'N'),
+		'options' 	=> array( 'Y' => 'Yes', 'N' => 'No'),
 		'type'   	=> 'radio',
 		'default'	=> 'Y',
 		'groups'	=> 'edit|add'
 	),
 	
-	'phone' => array(
-		'label'	 	=> 'Telephone',
-		'rules'  	=> 'trim|required|phonenumber|max_length[100]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'100', 'size'=>'30' )
+	'description' => array(
+		'label'	 	=> 'Description',
+		'rules'  	=> 'trim|xss_clean',
+		'type'   	=> 'tinymce',
+		'groups'	=> 'edit|admin',
+		'attr'		=> array( 'class' => 'txt', 'rows'=>'20', 'cols'=>'60' )
 	),
-	
-	'fax' => array(
-		'label'	 	=> 'Fax',
-		'rules'  	=> 'trim|phonenumber|max_length[100]|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'100', 'size'=>'30' )
-	),
-	
-	'email'	=> array(
-		'label'	 	=> 'Email',
-		'rules'  	=> 'trim|required|valid_email|xss_clean',
-		'type'   	=> 'input',
-		'groups'	=> 'edit|add',
-		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'100', 'size'=>'30' )
-	),	
 	
 	'contacts[]' => array(
-		'label'		=> 'Principle contact 1',	
+		'label'		=> 'Contacts',	
 		'rules'  	=> 'required|xss_clean',
+		'type'   	=> 'compact_multiselect',
+		'groups'	=> 'edit|add',
+		'options' 	=> 'related_model[Formatic_model_example:get_contacts::0]',
+	),
+	
+	'categories[]' => array(
+		'label'		=> 'Categories',	
+		'rules'  	=> 'xss_clean',
+		'type'   	=> 'checkbox',
+		'groups'	=> 'edit|add',
+		'options' 	=> array( '1' => 'Category 1', '2' => 'Category 2'),
+	),	
+		
+	'industries[]' => array(
+		'label'	 	=> 'Industries',
+		'rules'  	=> 'xss_clean',
 		'type'   	=> 'alternate_multiselect',
-		'groups'	=> 'edit',
-		'options' 	=> 'related_model[user_office:list_users_in_office:(please select)]',
+		'options'	=> 'related_model[Formatic_model_example:get_contacts::0]',
+		'groups'	=> 'edit|add',
+		'attr'		=> array( 'class' => 'txt', 'title' => '(please select)' )
 	),
 	
 	'opening_times' => array(
-		'label'		=> 'Monday',
+		'label'		=> 'Opening times',
 		'rules'  	=> 'xss_clean|max_length[9]',
 		'type'   	=> 'jslider',
 		'groups'	=> 'edit|add',
@@ -179,7 +122,70 @@ $config = array(
 		'attr'		=> array('maxlength'=>'9', 'size'=>'9' )
 	),
 	
+	'photo' => array(
+		'label'	 	=> 'Photo',
+		'rules'  	=> 'file_required|file_size_max[2048KB]|file_allowed_type[image]',
+		'type'   	=> 'fm_image',
+		'groups'	=> 'edit|add',
+		'template'	=> 'forms/row_photo',
+		'attr'		=> array( 'class' => 'file tooltip', 'maxlength'=>'255', 'size'=>'30', 'title'=>'File types: JPEG, GIF, PNG. Max file size: 2MB.'),
+		'upload_location'  	=> 'uploads/images/',
+		'default'  	=> 'logo_default.png',
+	),	
+	
+	'file' => array(
+		'label'		=> 'File',	
+		'rules'  	=> 'file_size_max[3072KB]|file_allowed_type[document]',
+		'type'   	=> 'upload',
+		'groups'	=> 'edit',
+		'template'	=> 'forms/row_file',
+		'attr'		=> array( 'class' => 'file tooltip', 'maxlength'=>'255', 'size'=>'30', 'title'=>'File types: Abobe PDF or Microsoft Word (RTF, DOC, DOCX). Max file size: 3MB.'),
+	),
+	
+	'date' => array(
+		'label'		=> 'Date',
+		'rules'  	=> 'callback_check_date',
+		'type'   	=> 'datepicker',
+		'class'		=> 'datepicker',
+		'groups'	=> 'edit|add',
+		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'10', 'size'=>'10' )
+	),
+	
+	/*
+	'recaptcha_response_field' => array(
+		'label'	 	=> 'Confirmation code',
+		'rules' 	=> 'trim|xss_clean|required|callback_check_recaptcha',
+		'type'   	=> 'recaptcha',
+		'template'	=> 'forms/row_recaptcha',
+		'groups'	=> 'edit|add',
+		'attr'		=> array( 'class' => 'txt', 'id'=>'recaptcha_response_field', 'maxlength'=>'100', 'size'=>'30' )
+	),
+	*/
+	
+	'captcha' => array(
+		'label'	 	=> 'Captcha code',
+		'rules'  	=> 'trim|xss_clean|required|callback_check_captcha',
+		'type'   	=> 'fm_captcha',
+		'template'	=> 'forms/row_captcha',
+		'groups'	=> 'edit|add',
+		'attr'		=> array( 'class' => 'txt', 'id'=>'captcha', 'maxlength'=>'8', 'size'=>'30' )
+	),
+	
+	'additional_field_1' => array(
+		'label'	 	=> 'Additional 1',
+		'rules'  	=> 'trim|min_length[4]|max_length[255]|xss_clean',
+		'type'   	=> 'input',
+		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
+	),
+	
+	'additional_field_2' => array(
+		'label'	 	=> 'Additional 2',
+		'rules'  	=> 'trim|min_length[4]|max_length[255]|xss_clean',
+		'type'   	=> 'input',
+		'attr'		=> array( 'class' => 'txt', 'maxlength'=>'255', 'size'=>'30' )
+	),
+	
 );
 
 /* End of file example.php */
-/* Location: ./application/config/fields/example.php */
+/* Location: ./application/formatic/fields/example.php */

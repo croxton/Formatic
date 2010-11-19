@@ -30,6 +30,10 @@
 |	['required_field']			String to replace into the row_tpl to indicate a required field
 
 |	['asset_bridge']			Asset library bridge class, for loading js/css assets used by plugins.
+|	['consistent_options']		Boolean. Use a consistent format for options arrays supplied for any form control: 
+								array(value1 => name1, value2 => name2).
+								This allows you to easily switch between field controls types, and is recommended.
+								Set to false to use the same formats that apply to individual controls in the CI Form Helper
 */
 
 $config['fields_dir'] 			= 'formatic/fields';
@@ -41,16 +45,19 @@ $config['display_widgets_dir'] 	= 'display_widgets';
 
 $config['row_tpl'] 				= 'forms/row';
 $config['row_options_tpl'] 		= 'forms/row_options';
-$config['outer_options_tpl'] 	= 'forms/outer_options';
+$config['outer_radio_tpl'] 		= 'forms/outer_radio';
+$config['outer_checkbox_tpl'] 	= 'forms/outer_checkbox';
 $config['row_error_tpl'] 		= 'forms/row_error';
 $config['outer_error_tpl'] 		= 'forms/outer_error';
+$config['inline_error_tpl'] 	= 'forms/inline_error';
 $config['fieldset_tpl'] 		= 'forms/fieldset';
 $config['css_error_class'] 		= 'error';
 $config['css_field_id_prefix']	= 'frm-';
 $config['css_label_id_prefix']	= 'lbl-';
 $config['required_field'] 		= '*';
 
-$config['asset_bridge']			= 'Formatic_carabiner_bridge';
+$config['asset_bridge']			= 'Formatic_stuff_bridge';
+$config['consistent_options']	= true;
 
 
 /*
@@ -111,7 +118,7 @@ $config['tinymce'] = array(
 | Requires jQuery 1.3.x+
 |--------------------------------------------------------------------------
 */
-$config['googlemap_api_key'] = 'Your-Key-Here';
+$config['googlemap_api_key'] = 'ABQIAAAArlJKklxJBsiyKtpIwi-yIRQpfK9r6QxDOBtXIiegstxtzKrwhxRXFO6EAZyP4NUfnoQG_eFENLjZfw';
 
 $config['googlemap'] = array(
 		
@@ -139,8 +146,9 @@ $config['googlemap'] = array(
 |--------------------------------------------------------------------------
 */
 $config['recaptcha'] = array(
-		'public_key'  => 'Your-Key-Here',
-		'private_key' => 'Your-Key-Here',
+		'css'		  =>  array('recaptcha.css', 'screen'),
+		'public_key'  => '6LcU0ggAAAAAAD1QaTgCcnUfGw5UUpUR8sr_jrf6',
+		'private_key' => '6LcU0ggAAAAAAB3yBvGirPeXeppDEonk-8yuYg2f',
 		'use_ssl'	  => true
 		);
 
@@ -158,7 +166,7 @@ $config['recaptcha'] = array(
 */
 $config['fm_captcha'] = array(		
 		'captcha_path' 				=> 'captcha/',
-		'captcha_fonts_path' 		=> 'captcha/fonts/5.ttf',
+		'captcha_fonts_path' 		=> 'system/fonts/texb.ttf',
 		'captcha_width'				=> 200,
 		'captcha_height'			=> 50,
 		'captcha_font_size' 		=> 14,
@@ -176,7 +184,7 @@ $config['fm_captcha'] = array(
 */
 $config['fm_image'] = array(
 		'upload_location'  	=> 'uploads/images/',
-		'default_thumb'  	=> 'default.jpg',
+		'default_thumb'  	=> 'default_user.jpg',
 		'preview_class' 	=> 'preview',
 		);
 		
@@ -200,12 +208,15 @@ $config['chained_select'] = array(
 | Requires jQuery 1.3.x+
 |--------------------------------------------------------------------------
 */
+// For localization include a date_LOCAL.js file from here: https://github.com/vitch/jquery-methods/
+
 $config['datepicker'] = array(
 		'js' 		=> array(
 							array('date.js'),
 							array('jquery.datePicker.js')
 					),		
 		'css'		=> 	array('jquery.datePicker.css', 'screen'),
+		'format'	=> 'mm/dd/yyyy'
 		);
 
 /*
@@ -285,6 +296,7 @@ $config['compact_multiselect'] = array(
 
 $config['alternate_multiselect'] = array(
 		'js' 		=> array(
+							array('http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.0/jquery-ui.min.js'),
 							array('jquery.asmselect.js'),
 					),		
 		'css'		=> 	array('jquery.asmselect.css','screen'),

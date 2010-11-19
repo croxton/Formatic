@@ -1,5 +1,5 @@
 a.multiSelect {
-	background: #FFF url(/_assets/img/multiselect/dropdown.blue.png) right center no-repeat;
+	background: #FFFFFF url(/_assets/img/multiselect/dropdown.blue.png) right center no-repeat;
 	border: solid 1px #BBB;
 	padding-right: 20px;
 	position: relative;
@@ -18,7 +18,6 @@ a.multiSelect:link, a.multiSelect:visited, a.multiSelect:hover, a.multiSelect:ac
 
 a.multiSelect span {
 	margin: 0px 0px 0px 3px;
-	overflow: hidden;
 	display: inline-block;
 	white-space: nowrap;
 }
@@ -46,6 +45,8 @@ a.multiSelect.active {
 
 .multiSelectOptions label {
 	padding: 0px 2px;
+	margin:0;
+	line-height: 1.2em;
 	display: block;
 	white-space: nowrap;
 }
