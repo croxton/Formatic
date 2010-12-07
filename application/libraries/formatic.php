@@ -14,7 +14,7 @@ $CI->load->library('form_validation');
  * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
  * @author  	Mark Croxton
- * @version 	1.1.1 (19 November 2010)
+ * @version 	1.1.2 (7 December 2010)
  */
 
 class Formatic extends CI_Form_validation {
@@ -1144,6 +1144,21 @@ class Formatic extends CI_Form_validation {
 		{
 			return $data;
 		}		
+	}
+	
+	/**
+     * get_data_group
+     * 
+	 * retrieves user submitted data from form for fields in tagged group(s)
+ 	 *
+     * @access    public
+     * @param     array or string
+     * @return    array
+     */    
+    public function get_data_group($groups='')
+	{
+		$fields = $this->_fields;
+		return $this->get_data($fields, $groups);	
 	}
 	
 	// --------------------------------------------------------------------

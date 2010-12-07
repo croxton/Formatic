@@ -208,7 +208,9 @@ $config['chained_select'] = array(
 | Requires jQuery 1.3.x+
 |--------------------------------------------------------------------------
 */
-// For localization include a date_LOCAL.js file from here: https://github.com/vitch/jquery-methods/
+// Format string must include dd, mm and yyyy (can be any order)
+// For localization of calendar pop-up include the desired date_LOCAL.js file: 
+// https://github.com/vitch/jquery-methods/
 
 $config['datepicker'] = array(
 		'js' 		=> array(

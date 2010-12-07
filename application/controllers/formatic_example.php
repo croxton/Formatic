@@ -62,20 +62,24 @@ class Formatic_example extends CI_Controller {
 			$subset  = $this->formatic->get_data('field');
 			
 			// ...or get an array of fields...
-			$subset  = $this->formatic->get_data('field1', 'field2');
+			$subset  = $this->formatic->get_data(array('field1', 'field2'));
 			
-			//...or get a tagged group of fields like this
-			$subset  = $this->formatic->get_data('', 'group1'));
+			// ...or get a tagged group of fields like this
+			$subset  = $this->formatic->get_data_group('group1'));
 			
-			//...or get multiple tagged groups of fields like this
-			$subset  = $this->formatic->get_data('', array('group1', 'group2'));
+			// ...or get multiple tagged groups of fields like this
+			$subset  = $this->formatic->get_data_group(array('group1', 'group2'));
+			
+			// ...or get a tagged group from an arbitary array of fields
+			$subset  = $this->formatic->get_data($fields, 'group1'));
+			
 			-------------------------------------------------------------------- */
 			
 			/* --------------------------------------------------------------------
 			// create a custom error message for a field on the fly
 			
 			// e.g.: match at least 2 words for name
-			if (!preg_match ("/\w+\s+\w+/ ", $submitted_data['name']))
+			if (!preg_match ("/\w+\s+\w+/ ", $view_data['valid_data']))
 			{ 
 				$this->formatic->set_form_error('name', 'The Name field must contain at least 2 words.');	
 			}

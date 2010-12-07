@@ -34,7 +34,9 @@ $lang['file_image_mindim_size'] 		= '%s image size is too small.';
 // Field plugins
 // Prefix with [plugin_]
 $lang['googlemap_find'] 		= 'Find';
-$lang['googlemap_noscript'] 	= 'Javascript is required to view this map';
+$lang['googlemap_noscript'] 	= 'Javascript is required to view this map.';
+
+$lang['datepicker_invalid_date'] 	= 'Invalid date format.';
 
 // Custom error messages
 $lang['csrf_bad_token']			= 'A bad token was detected: possible cross-site request forgery.';

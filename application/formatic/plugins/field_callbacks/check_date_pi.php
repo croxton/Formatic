@@ -27,25 +27,28 @@ class Check_date extends Formatic_plugin {
 		$formatic =& $this->CI->formatic;
 	
 		$config = array_merge(
-			$formatic->get_plugin_config(__CLASS__), 
+			$formatic->get_plugin_config('datepicker'), 
 			$formatic->get_field_config($f)
 		);
 		
 		// only validate if not empty
 		if (!empty($postdata))
 		{
-			$date = explode("/", $postdata);
+			// get date
+			$dd 	= (int) substr($postdata, strpos($config['format'], 'dd'),   2);
+			$mm 	= (int) substr($postdata, strpos($config['format'], 'mm'),   2);
+			$yyyy 	= (int) substr($postdata, strpos($config['format'], 'yyyy'), 4);
 		
-	        if(count($date) <= 2)
+	        if(!$dd OR !$mm OR !$yyyy)
 	        {
-	            $formatic->set_form_error($f, 'Date must be in dd/mm/yyyy format.');
+	            $formatic->set_form_error($f, $formatic->lang->line('datepicker_invalid_date'));
 	            return false;
 	        }
 	        else
 	        {
-	            if(!checkdate((int)$date[1], (int)$date[0], (int)$date[2]))
+	            if(!checkdate($mm, $dd, $yyyy))
 	            {
-	                $formatic->set_form_error($f, 'Date must be valid.');
+	                $formatic->set_form_error($f, $formatic->lang->line('datepicker_invalid_date'));
 	                return false;
 	            }
 	            else
