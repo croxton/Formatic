@@ -13,10 +13,10 @@ and associated validation logic. It allows you to render, validate and repopulat
 ## Formatic plugins
 Formatic is extensible via plugins:
 
-Field options: Populates a form control with existing data (for example, from a model function)
-Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
-Field callbacks: Apply a custom validation routine to a form control
-Display widget: Intelligent view partial for the form control value (e.g. render a Googlemap)
+* Field options: Populates a form control with existing data (for example, from a model function)
+* Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
+* Field callbacks: Apply a custom validation routine to a form control
+* Display widget: Intelligent view partial for the form control value (e.g. render a Googlemap)
 
 Form controls and validation rules are described using configuration files, and groups of fields can be
 tagged for reuse throughout an application. Plugins have global configuration settings which can be
