@@ -5,9 +5,10 @@
  *
  * Formatic field plugin
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
  * @version 	1.0.0
  */
 
@@ -27,28 +28,25 @@ class Check_date extends Formatic_plugin {
 		$formatic =& $this->CI->formatic;
 	
 		$config = array_merge(
-			$formatic->get_plugin_config('datepicker'), 
+			$formatic->get_plugin_config(__CLASS__), 
 			$formatic->get_field_config($f)
 		);
 		
 		// only validate if not empty
 		if (!empty($postdata))
 		{
-			// get date
-			$dd 	= (int) substr($postdata, strpos($config['format'], 'dd'),   2);
-			$mm 	= (int) substr($postdata, strpos($config['format'], 'mm'),   2);
-			$yyyy 	= (int) substr($postdata, strpos($config['format'], 'yyyy'), 4);
+			$date = explode("/", $postdata);
 		
-	        if(!$dd OR !$mm OR !$yyyy)
+	        if(count($date) <= 2)
 	        {
-	            $formatic->set_form_error($f, $formatic->lang->line('datepicker_invalid_date'));
+	            $formatic->set_form_error($f, 'Date must be in dd/mm/yyyy format.');
 	            return false;
 	        }
 	        else
 	        {
-	            if(!checkdate($mm, $dd, $yyyy))
+	            if(!checkdate((int)$date[1], (int)$date[0], (int)$date[2]))
 	            {
-	                $formatic->set_form_error($f, $formatic->lang->line('datepicker_invalid_date'));
+	                $formatic->set_form_error($f, 'Date must be valid.');
 	                return false;
 	            }
 	            else

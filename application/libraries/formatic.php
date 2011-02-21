@@ -11,10 +11,11 @@ $CI->load->library('form_validation');
  *
  * Form automation class
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
- * @version 	1.1.2 (7 December 2010)
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
+ * @version 	1.1.3 (21 February 2010)
  */
 
 class Formatic extends CI_Form_validation {
@@ -30,41 +31,52 @@ class Formatic extends CI_Form_validation {
 	function __construct($rules = array())
 	{
 		// call the parent class constructor
-		#parent::CI_Form_validation($rules);
 		parent::__construct($rules);
 		
-		// load & assign libraries
-		$this->_load_libraries();
-		
-		// get a reference to variables in the current scope
-		$this->cached_vars =& $this->load->_ci_cached_vars;
-		
-		// load helpers
-		$this->load->helper(array('form', 'formatic'));
-		
-		// load languages
-		$this->lang->load('formatic');
-		
-		// load config
-		$this->config->load('formatic', TRUE, TRUE);
-		
-		// Get config settings by reference
-		$prefs =& $this->config->config['formatic'];
-		
-		foreach (array_keys($prefs) as $key)
+		if ($this->CI =& get_instance())
 		{
-			// Only if they're not already set
-			if (empty($this->formatic_prefs->{$key}))
+			// load required libraries
+			$this->CI->load->library('parser');
+
+			// assign convenient references
+			$this->parser 	=& $this->CI->parser;
+			$this->lang 	=& $this->CI->lang;
+			$this->load 	=& $this->CI->load;
+			$this->config 	=& $this->CI->config;
+		
+			// get a reference to variables in the current scope
+			$this->cached_vars =& $this->load->_ci_cached_vars;
+		
+			// load helpers
+			$this->load->helper(array('form', 'formatic'));
+		
+			// load config
+			$this->config->load('formatic', TRUE, TRUE);
+		
+			// Get config settings by reference
+			$prefs =& $this->config->config['formatic'];
+		
+			foreach (array_keys($prefs) as $key)
 			{
-				$this->formatic_prefs->{$key} =& $prefs[$key];
+				// Only if they're not already set
+				if (empty($this->formatic_prefs->{$key}))
+				{
+					$this->formatic_prefs->{$key} =& $prefs[$key];
+				}
 			}
-		}
-		unset ($prefs);
+			unset ($prefs);
 		
-		// load asset bridge
-		$this->CI->load->library($this->formatic_prefs->asset_bridge, '', 'assets');
-		$this->assets = $this->CI->assets;
+			// load languages and session class, if not using EE
+			if ($this->formatic_prefs->is_EE == FALSE)
+			{
+				$this->CI->load->library('session');
+				$this->lang->load('formatic');
+			}
 		
+			// load asset bridge
+			$this->CI->load->library($this->formatic_prefs->asset_bridge, '', 'assets');
+			$this->assets = $this->CI->assets;
+		}	
 	}
 	
 	private function _register_plugin($plugin, $file) 
@@ -102,38 +114,75 @@ class Formatic extends CI_Form_validation {
 		}
   	}
 	
-	// --------------------------------------------------------------------
-
 	/**
-	 * Load libraries
+	 * Load view
 	 *
-	 * Loads and assigns CodeIgniter system libraries to Formatic by reference.
+	 * Load a view file, using the configured view path if set
+	 * or the supplied path if supplied as an argument
 	 *
-	 * @access	private
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @param	bool
+	 * @param	string
 	 * @return	void
 	 */
-	private function _load_libraries()
+	public function load_view($view, $vars = array(), $return = FALSE, $path='')
 	{
-		if ($CI =& get_instance())
+		if (!empty($this->formatic_prefs->views_dir) || !empty($path))
 		{
-			// load required libraries
-			$CI->load->library('parser');
-			$CI->load->library('session');
+			if (empty($path))
+			{
+				$file = APPPATH.$this->formatic_prefs->views_dir.'/'.$view.EXT;
+			}
+			else
+			{
+				$file = $path.$view.EXT;
+			}
 
-			// assign loaded libraries
-			$this->parser = $CI->parser;
-			
-			// assign system libraries (already loaded)
-			$this->lang = $CI->lang;
-			$this->load = $CI->load;
-			#$this->db = $CI->db;
-			$this->config = $CI->config;
-			
-			// assign a reference to the super object
-			$this->CI = $CI;
+			// override default view path
+			return $this->load->_ci_load(array(
+				'_ci_view' 		=> $view, 
+				'_ci_vars' 		=> ((is_object($vars)) ? get_object_vars($vars) : $vars), 
+				'_ci_return' 	=> $return,
+				'_ci_path'	 	=> $file
+			));
 		}
-		
+		else
+		{
+			// just load a view normally
+			return $this->load->view($view, $vars, $return);
+		}
 	}
+	
+	/**
+	 * Parse a template
+	 *
+	 * Parses pseudo-variables contained in the specified template view,
+	 * replacing them with the data in the second param
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	array
+	 * @param	bool
+	 * @param	string
+	 * @return	string
+	 */
+	public function parse($template, $data, $return = FALSE, $path='')
+	{
+		if (!empty($this->formatic_prefs->views_dir) || !empty($path))
+		{
+			// override default view path
+			$template = $this->load_view($template, $data, TRUE, $path);
+			return $this->parser->_parse($template, $data, $return);
+		}
+		else
+		{
+			// parse template normally
+			return $this->parser->parse($template, $data, $return);
+		}
+	}
+	
 	
 	/**
 	 * Load fields
@@ -419,16 +468,19 @@ class Formatic extends CI_Form_validation {
 	 * @param  array $populate The field data.
 	 * @param  string $groups The fieldgroups to render.
 	 * @param  array $tpl_row The view(s) to render each field into.
-	 * @param  bool $return_object Return as an array or object.
+	 * @param  string $render return type (string|array|object)
 	 * @return mixed Object or Array.
 	 */
-	public function make_fields($fields=array(), $groups='', $populate=array(), $tpl_row=NULL,  $render = FALSE)
+	public function make_fields($fields=array(), $groups='', $populate=array(), $tpl_row=NULL,  $render = "object")
 	{
 		// use used field array by default
 		if (empty($fields)) $fields = $this->_fields;
 			
 		$field_html = array();
 		$rendered_fields = '';
+		
+		// load any required assets for this field group
+		$this->_load_assets($fields);
 		
 		// get locally scoped view variables or use the $populate array?
 		if (is_array($populate) && count($populate) > 0)
@@ -438,35 +490,35 @@ class Formatic extends CI_Form_validation {
 		else
 		{
 			$view_data =& $this->cached_vars;	
-		}
+		}		
 		
 		// row template(s)
 		if (!is_null($tpl_row) && $tpl_row !== '')
 		{
-			$tpl_row = $this->load->view($tpl_row, '', TRUE);
+			$tpl_row = $this->load_view($tpl_row, '', TRUE);
 		}
 		else
 		{
 			// null - load default row template view
-			$tpl_row = $this->load->view($this->formatic_prefs->row_tpl, '', TRUE);
+			$tpl_row = $this->load_view($this->formatic_prefs->row_tpl, '', TRUE);
 		}
 		
 		// default options row template - don't load unless needed!
 		$tpl_row_options = '';
 		
 		// load default outer radio and checkbox templates
-		$tpl_outer_radio 	= $this->load->view($this->formatic_prefs->outer_radio_tpl, '', TRUE);
-		$tpl_outer_checkbox = $this->load->view($this->formatic_prefs->outer_checkbox_tpl, '', TRUE);
+		$tpl_outer_radio 	= $this->load_view($this->formatic_prefs->outer_radio_tpl, '', TRUE);
+		$tpl_outer_checkbox = $this->load_view($this->formatic_prefs->outer_checkbox_tpl, '', TRUE);
 		
 		// load inline error template
-		$tpl_inline_error = $this->load->view($this->formatic_prefs->inline_error_tpl, '', TRUE);
+		$tpl_inline_error = $this->load_view($this->formatic_prefs->inline_error_tpl, '', TRUE);
 		
 		// get groups
 		if ($groups !== '')
 		{
 			$groups = str_replace(" ","",$groups);
 			$groups = explode('|', $groups);
-		}
+		}	
 	
 		foreach ($fields as $f => $v)
 		{
@@ -518,6 +570,7 @@ class Formatic extends CI_Form_validation {
 
 			switch ($v['type'])
 			{
+			
 				case 'input': case 'upload' : case 'password' :	
 					$data = array(
 						'name'        => $f,
@@ -528,6 +581,7 @@ class Formatic extends CI_Form_validation {
 					$field_html[$f]['field'] = call_user_func('form_'.$v['type'], $data);
 					break;
 				
+	
 				case 'textarea' :
 					$data = array(
 						'name'        => $f,
@@ -674,7 +728,7 @@ class Formatic extends CI_Form_validation {
 							// load options row template if configured	
 							if (isset($v['template_options_row']))
 							{
-								$row_options_tpl = $this->load->view($v['template_options_row'], '', TRUE);
+								$row_options_tpl = $this->load_view($v['template_options_row'], '', TRUE);
 							}
 							else
 							{
@@ -682,7 +736,7 @@ class Formatic extends CI_Form_validation {
 								if ($tpl_row_options == '')
 								{
 									// only load the default row template the first time it is requested
-									$tpl_row_options = $this->load->view($this->formatic_prefs->row_options_tpl, '', TRUE);
+									$tpl_row_options = $this->load_view($this->formatic_prefs->row_options_tpl, '', TRUE);
 								}
 								$row_options_tpl = $tpl_row_options;
 							}
@@ -693,17 +747,17 @@ class Formatic extends CI_Form_validation {
 							// add to html
 							$field_html[$f]['field'] .= $row;
 							
-							//increment count
+							// increment count
 							$count ++;
 						}
 					}
 					break;
-
+								
 				default :
 					// try to load a field_type plugin of the requested type
 					$field_html[$f]['field'] = $this->load_field_plugin('type', $v['type'], $f);
 			}
-			
+					
 			// add some useful info for form labels etc
 			$label = @$v['label'];
 			
@@ -780,7 +834,7 @@ class Formatic extends CI_Form_validation {
 				}
 
 				// replace placeholders in the row template
-				$tpl = $this->parser->parse($config_template, $replace, TRUE);	
+				$tpl = $this->parse($config_template, $replace, TRUE);	
 			}
 			
 			// map to row template
@@ -799,7 +853,7 @@ class Formatic extends CI_Form_validation {
 			}
 			
 			// are we rendering the fields or returning an object?
-			if ($render)
+			if ($render == "string")
 			{
 				if ($tpl !== '')
 				{
@@ -823,14 +877,19 @@ class Formatic extends CI_Form_validation {
 			}
 		}
 
-		// cast to an object and return - uses to_object in formatic_helper
-		if (!$render)
+		// return html string, object or array
+		if ($render == "array")
 		{
+			return $field_html;
+		}
+		elseif ($render == "object")
+		{
+			// cast to an object and return - uses to_object in formatic_helper
 			return to_object($field_html);
 		}
-		// else return rendered field html
 		else
 		{
+			// html string
 			return $rendered_fields;
 		}
 	}
@@ -916,8 +975,8 @@ class Formatic extends CI_Form_validation {
 		}
 		
 		// load views
-		$tpl_row   = $this->load->view($tpl_row, '', TRUE);
-		$tpl_outer = $this->load->view($tpl_outer, '', TRUE);
+		$tpl_row   = $this->load_view($tpl_row, '', TRUE);
+		$tpl_outer = $this->load_view($tpl_outer, '', TRUE);
 
 		// any extra errors passed in the function call
 		$errors = array_merge($extra, $errors);
@@ -974,7 +1033,6 @@ class Formatic extends CI_Form_validation {
 	 */
 	public function render_fieldset($legend='', $fields=array(), $groups='', $populate=array(), $tpl=NULL, $tpl_row=NULL, $attributes=array())
 	{	
-		
 		$tpl = is_null($tpl) ? $this->formatic_prefs->fieldset_tpl : $tpl;
 		
 		// render the field rows
@@ -985,8 +1043,7 @@ class Formatic extends CI_Form_validation {
 			'legend' => $legend,
 			'rows'   => $rows
 		);
-		
-		return $this->cleanup($this->parser->parse($tpl,$view_data,TRUE));
+		return $this->cleanup($this->parse($tpl,$view_data,TRUE));
 	}
 	
 	/**
@@ -1000,7 +1057,7 @@ class Formatic extends CI_Form_validation {
 	{		
 		// remove any unused {tags}
 		$pattern = '/{[a-zA-Z_-]+}/Usi';
-		return preg_replace($pattern,'',$content);
+		return preg_replace($pattern, '' , $content);
 	}
 	
 	// --------------------------------------------------------------------
@@ -1075,8 +1132,7 @@ class Formatic extends CI_Form_validation {
 	
 		if ($groups !== '' && is_array($fields))
 		{	
-			// we're searching within a formatic fields config array for one or more groups
-			
+			// we're searching within a formatic fields config array for one or more groups			
 			if (!is_array($groups))
 			{
 				$groups = str_replace(" ", "", $groups);
@@ -1111,8 +1167,7 @@ class Formatic extends CI_Form_validation {
 		}
 		else
 		{	
-			// we're searching for a list of fieldnames
-			
+			// we're searching for a list of fieldnames			
 			if (!is_array($fields))
 			{
 				$fields = str_replace(" ", "", $fields);
@@ -1302,9 +1357,6 @@ class Formatic extends CI_Form_validation {
 		// grab a subset of the loaded fields
 		$fields = $this->_get_group($groups, $index);
 
-		// load any required assets for this field group
-		$this->_load_assets($fields);
-		
 		// add to used fields array
 		$this->_fields += $fields;
 		
@@ -1325,18 +1377,10 @@ class Formatic extends CI_Form_validation {
 	public function fields($fields='', $index='')
 	{
 		// just one field?
-		if (!is_array($fields))
-		{
-			$fields = array($fields);
-		}
+		$fields = is_array($fields) ? $fields : array($fields);
 		
 		// grab a subset of the loaded fields
-		$prefs = $this->_get_fields($fields, $index);
-
-		// load any required assets for this group
-		$this->_load_assets($prefs);
-		
-		return $prefs;
+		return $this->_get_fields($fields, $index);
 	}
 	
 	/**
@@ -1369,8 +1413,10 @@ class Formatic extends CI_Form_validation {
 		$this->_fields += $fields;
 		
 		// add to used field group(s) array
-		$this->_groups = array_merge($this->_groups, explode("|", $groups));
-		
+		if (!empty($groups))
+		{
+			$this->_groups = array_merge($this->_groups, explode("|", $groups));
+		}	
 		return $fields;
 	}
 	
@@ -1400,6 +1446,8 @@ class Formatic extends CI_Form_validation {
         
         // Get existing tokens from the session
         $tokens = $this->CI->session->userdata('tokens');
+
+		
         if(!is_array($tokens)) $tokens = array();
         
         // Remove old tokens
@@ -1409,7 +1457,7 @@ class Formatic extends CI_Form_validation {
                 unset($tokens[$key]);
             }
         } 
-         
+        
         // Limit the tokens saved. Less if stored in a cookie
         $numTokens = 3;
         if($this->CI->config->item('sess_use_database')) {
@@ -1427,11 +1475,12 @@ class Formatic extends CI_Form_validation {
         // Add the new token to the token array and save to the session
         $tokens[] = array('ts'=>$now, 'token'=>$token, 'formID'=>$formID); 
         $this->CI->session->set_userdata('tokens', $tokens);
-        
+         
         // Save the token data for this instance
         $this->formID = $formID;
         $this->token  = $token;                            
         return array('formID'=>$formID, 'token'=>$token);   
+
     }
     
     /**
@@ -1525,23 +1574,34 @@ class Formatic extends CI_Form_validation {
      */    
     private function _validate_token() {
         
-        // Form ID and token from the POST input
-        $in_formID = $this->CI->input->post('formid');
-        $in_token  = $this->CI->input->post('token');
-        
-        // Validate token from POST
-        if(!$this->validate_token($in_formID, $in_token)) 
-		{   
-            // Create a new token and set the error
-            $this->create_token();
-            $this->_error_array[] = $this->lang->line('csrf_bad_token');
-        }
-        
-        // Token is fine. Save it for reuse in case other validation tests fail
-        else 
+		if ($this->formatic_prefs->is_EE == FALSE)
 		{
-            $this->save_token($in_formID, $in_token);
-        }      
+       	 	// Form ID and token from the POST input
+	        $in_formID = $this->CI->input->post('formid');
+	        $in_token  = $this->CI->input->post('token');
+        
+	        // Validate token from POST
+	        if(!$this->validate_token($in_formID, $in_token)) 
+			{   
+	            // Create a new token and set the error
+	            $this->create_token();
+	            $this->_error_array[] = $this->lang->line('csrf_bad_token');
+	        }
+        
+	        // Token is fine. Save it for reuse in case other validation tests fail
+	        else 
+			{
+	            $this->save_token($in_formID, $in_token);
+	        }  
+    	}
+		else
+		{
+			// Using EE, so we're using EE's built in CSRF protection
+			if ($this->CI->security->secure_forms_check($this->CI->input->post('XID')) == FALSE) 
+			{
+				$this->_error_array[] = $this->lang->line('csrf_bad_token');
+			}	
+		}
     }
 	
 	
@@ -1953,7 +2013,7 @@ class Formatic extends CI_Form_validation {
     * @param mixed $file
     * @param mixed $min_size
     */
-    public function file_size_min($file,$min_size)
+    public function file_size_min($file, $min_size)
     {
         $max_size_bit = $this->let_to_bit($max_size);
         if($file['size']<$min_size_bit)
@@ -1971,7 +2031,7 @@ class Formatic extends CI_Form_validation {
     * @param mixed $file
     * @param mixed $type
     */
-    public function file_allowed_type($file,$type)
+    public function file_allowed_type($file, $type)
     {		
         //is type of format a,b,c,d? -> convert to array
         $exts = explode(',',$type);
@@ -2018,7 +2078,7 @@ class Formatic extends CI_Form_validation {
         }
     }
     
-    public function file_disallowed_type($file,$type)
+    public function file_disallowed_type($file, $type)
     {
         $rc = $this->file_allowed_type($file,$type);
         if(!$rc)
@@ -2083,7 +2143,7 @@ class Formatic extends CI_Form_validation {
     * @param mixed $file
     * @param array $dim
     */
-    public function file_image_maxdim($file,$dim)
+    public function file_image_maxdim($file, $dim)
     {
         $dim = explode(',',$dim);
         
@@ -2118,7 +2178,7 @@ class Formatic extends CI_Form_validation {
     * @param mixed $file
     * @param array $dim
     */
-    public function file_image_mindim($file,$dim)
+    public function file_image_mindim($file, $dim)
     {
         $dim = explode(',',$dim);
         
@@ -2226,7 +2286,7 @@ class Formatic extends CI_Form_validation {
 	
 	
 	// --------------------------------------------------------------------
-	// misc custom validation rules
+	// misc custom validation rules (legacy, will be removed)
 	
 	/**
      * phonenumber
@@ -2298,4 +2358,5 @@ abstract class Formatic_asset_bridge {
 	abstract public function __construct();
 	abstract public function js($file, $group="", $prod_file="", $combine=FALSE, $minify=FALSE);
 	abstract public function css($file, $media="", $group="", $prod_file="", $combine=FALSE, $minify=FALSE);
+	abstract public function render($groups=array());
 }

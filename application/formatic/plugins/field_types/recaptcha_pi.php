@@ -8,9 +8,10 @@
  * Requires recaptchalib located at http://code.google.com/p/recaptcha/downloads/list?q=label:phplib-Latest.
  * Rename recaptchalib.php to recaptcha_helper.php and put it in your helpers fold
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
  * @version 	1.0.0
  */
 	

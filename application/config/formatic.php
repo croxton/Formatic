@@ -34,6 +34,7 @@
 								array(value1 => name1, value2 => name2).
 								This allows you to easily switch between field controls types, and is recommended.
 								Set to false to use the same formats that apply to individual controls in the CI Form Helper
+|	['is_EE']					Boolean. Is Formatic being using inside an ExpressionEngine application?
 */
 
 $config['fields_dir'] 			= 'formatic/fields';
@@ -57,7 +58,8 @@ $config['css_label_id_prefix']	= 'lbl-';
 $config['required_field'] 		= '*';
 
 $config['asset_bridge']			= 'Formatic_stuff_bridge';
-$config['consistent_options']	= true;
+$config['consistent_options']	= TRUE;
+$config['is_EE'] 				= FALSE;
 
 
 /*
@@ -164,8 +166,9 @@ $config['recaptcha'] = array(
 | 'captcha_case_sensitive' = Captcha case sensitive or not.
 |--------------------------------------------------------------------------
 */
-$config['fm_captcha'] = array(		
-		'captcha_path' 				=> 'captcha/',
+$config['fm_captcha'] = array(	
+		'captcha_img_path' 			=> './captcha/',
+		'captcha_img_url' 			=> '/captcha/',	
 		'captcha_fonts_path' 		=> 'system/fonts/texb.ttf',
 		'captcha_width'				=> 200,
 		'captcha_height'			=> 50,
@@ -173,6 +176,7 @@ $config['fm_captcha'] = array(
 		'captcha_grid' 				=> FALSE,
 		'captcha_expire' 			=> 180,
 		'captcha_case_sensitive' 	=> FALSE,
+		'captcha_cookie_salt'		=> 'UXyiqWkZM4CslDwdWwhJfd7OMLsZWAy'
 		);		
 
 /*

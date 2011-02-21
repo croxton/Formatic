@@ -5,16 +5,8 @@
 	<style type="text/css" media="all">@import url('/_assets/css/formatic_default_theme.css');</style>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js" charset="UTF-8"></script>
 	
-	<?
-	/*
-	// If using Carabiner, assets would be loaded like this
-	echo $this->carabiner->display('js');
-	echo $this->carabiner->display('css');
-	*/
-	?>
-	
-	<!-- Stuff managed assets -->
-	<?= Stuff::render('main') ?>
+	<!-- Render form assets -->
+	<?= form_assets() ?>
 	
 </head>
 <body>
@@ -41,8 +33,8 @@
 			<?= $f->name->row ?>
 			<?= $f->date->row ?>
 			<?= $f->timezone->row ?>
-			<?= $f->map->row ?>
 			<?= $f->show_marker->row ?>
+			<?= $f->map->row ?>
 			<?= $f->description->row ?>
 			<?= $f->contacts->row ?>
 			<?= $f->opening_times->row ?>

@@ -5,10 +5,11 @@
  *
  * Formatic field plugin
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
- * @version 	1.0.0
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
+ * @version 	1.0.1
  */
 
 class Fm_captcha extends Formatic_plugin {	
@@ -33,9 +34,9 @@ class Fm_captcha extends Formatic_plugin {
 		);
 
 		$cap = create_captcha(array(
-			'img_path'		=> './'.$config['captcha_path'],
-			'img_url'		=> $config['captcha_path'],
-			'font_path'		=> './'.$config['captcha_fonts_path'],
+			'img_path'		=> $config['captcha_img_path'],
+			'img_url'		=> $config['captcha_img_url'],
+			'font_path'		=> $config['captcha_fonts_path'],
 			'font_size'		=> $config['captcha_font_size'],
 			'img_width'		=> $config['captcha_width'],
 			'img_height'	=> $config['captcha_height'],
@@ -44,10 +45,30 @@ class Fm_captcha extends Formatic_plugin {
 		));
 
 		// Save captcha params in session
-		$this->CI->session->set_userdata(array(
-			'captcha_word' => $cap['word'],
-			'captcha_time' => $cap['time'],
-		));
+		// Take account of Session class differences in EE
+		if (method_exists($this->CI->session, 'set_userdata'))
+		{
+			$this->CI->session->set_userdata(array(
+				'captcha_word' => $cap['word'],
+				'captcha_time' => $cap['time'],
+			));
+		}
+		else
+		{
+			// EE, so we'll use a cookie, taking precaution to salt and hash the captcha word
+			if (!$config['captcha_case_sensitive'])
+			{
+				$cap['word'] = sha1(strtolower($cap['word']).$config['captcha_cookie_salt']);
+			}
+			else
+			{
+				$cap['word']= sha1($cap['word'].$config['captcha_cookie_salt']);
+			}
+			$this->CI->functions->set_cookie('fm_captcha', serialize(array(
+				'captcha_word' => $cap['word'],
+				'captcha_time' => $cap['time'],
+			)), 1800); // 30 minutes
+		}
 	
 		$r =  $cap['image'];
 	
@@ -65,7 +86,7 @@ class Fm_captcha extends Formatic_plugin {
 		$view_data = array(
 			"captcha_html" => $r 
 		);
+		
 		$formatic->set_template_config($f, $view_data);
-
 	}
 }

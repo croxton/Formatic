@@ -7,9 +7,10 @@
  *
  * JQuery Slider form field
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
  * @version 	1.0.0
  */
 

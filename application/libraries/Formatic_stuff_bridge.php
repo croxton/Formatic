@@ -5,10 +5,11 @@
  * Bridges Dan Horrigan's Stuff asset manager with Formatic
  * https://github.com/dhorrigan/codeigniter-stuff
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
- * @version 	1.0.0
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
+ * @version 	1.0.1
  */
 
 // --------------------------------------------------------------------------
@@ -103,5 +104,27 @@ class Formatic_stuff_bridge extends Formatic_asset_bridge {
 			// string
 			Stuff::css($file, array(), $group);
 		}
+	}
+	
+	/**
+	 * Render
+	 *
+	 * @param	Array of groups to render
+	 * @return	string
+	 */	
+	public function render($groups=array())
+	{	
+		$output = '';
+		
+		if (empty($groups))
+		{
+			$groups = array('main');
+		}
+		foreach ($groups as $group) 
+		{
+			$output .= Stuff::render($group);
+		}
+		
+		return $output;
 	}	
 }

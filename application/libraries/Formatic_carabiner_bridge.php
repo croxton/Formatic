@@ -5,10 +5,11 @@
  * Bridges Tony Dewan's Carabiner asset manager with Formatic
  * https://github.com/tonydewan/Carabiner
  *
- * @license 	Creative Commons Attribution-Share Alike 3.0 Unported
  * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
- * @version 	1.0.0
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
+ * @version 	1.0.1
  */
 
 // --------------------------------------------------------------------------
@@ -133,4 +134,25 @@ class Formatic_carabiner_bridge extends Formatic_asset_bridge {
 		}
 	}
 	
+	/**
+	 * Render
+	 *
+	 * @param	Array of groups to render
+	 * @return	string
+	 */	
+	public function render($groups=array())
+	{	
+		$output = '';
+		
+		if (empty($groups))
+		{
+			$groups = array('css', 'js');
+		}
+		foreach ($groups as $group) 
+		{
+			$output .= $this->CI->carabiner->display($group);
+		}
+		
+		return $output;
+	}	
 }

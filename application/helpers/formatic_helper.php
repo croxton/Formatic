@@ -1,6 +1,16 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
+ * Formatic helper
+ *
+ * @package		Formatic
+ * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
+ * @author  	Mark Croxton
+ * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
+ * @version 	1.0.0
+ */
+
+/**
  * To object
  *
  * Converts a multidimensional array to an object
@@ -113,28 +123,57 @@ if ( ! function_exists('render_row'))
 if ( ! function_exists('form_token'))
 {
 	function form_token() {
-	    
+		
 		if (FALSE === ($OBJ =& _get_formatic_object()))
 		{
 			return '';
 		}
+		
+		if ($OBJ->CI->config->config['formatic']['is_EE'] == FALSE)
+		{	
+		    // Get the token from the csrf class
+		    $tokenArray = $OBJ->get_token();    
+		    if(!$tokenArray) {
+		        // Token is bad. Create a new one
+		        $tokenArray = $OBJ->create_token();    
+		    }
     
-	    // Get the token from the csrf class
-	    $tokenArray = $OBJ->get_token();    
-	    if(!$tokenArray) {
-	        // Token is bad. Create a new one
-	        $tokenArray = $OBJ->create_token();    
-	    }
+		    // Return token hidden form field strings
+		    $input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'hidden'));
+		    $input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'hidden'));
     
-	    // Return token hidden form field strings
-	    $input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'hidden'));
-	    $input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'hidden'));
-    
-	    // Visible form fields for testing. Should not be used in production
-	    //$input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'input'));
-	    //$input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'input'));
-    
-	    return "\n $input_formID \n $input_token\n";
+		    // Visible form fields for testing. Should not be used in production
+		    //$input_formID = form_input(array('name'=>'formid', 'id'=>'formid', 'value'=>$tokenArray['formID'], 'type'=>'input'));
+		    //$input_token  = form_input(array('name'=>'token', 'id'=>'token', 'value'=>$tokenArray['token'], 'type'=>'input'));
+			return "\n $input_formID \n $input_token\n";
+		}
+		else
+		{
+			// Using EE, so we'll use EE's built in CSRF protection
+			$input_siteID = form_input(array('name'=>'site_id', 'value'=>$OBJ->CI->config->item('site_id'), 'type'=>'hidden'));
+			$input_token  = form_input(array('name'=>'XID', 'value'=>'{XID_HASH}', 'type'=>'hidden'));
+			
+			return "\n $input_siteID \n $input_token\n";
+		}
+	}
+}
+
+/**
+ * Render links to formatic assets
+ * 
+ * @param array $field The field to render.
+ * @return Rendered String.
+ */
+	
+if ( ! function_exists('render_assets'))
+{
+	function form_assets($groups=array())
+	{
+		if (FALSE === ($OBJ =& _get_formatic_object()))
+		{
+			return '';
+		}
+		return $OBJ->assets->render($groups);
 	}
 }
 	
