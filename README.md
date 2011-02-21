@@ -51,8 +51,7 @@ In addition to the above, file uploads and file validation are available out of 
 5. Install and configure an asset manager: [Carabiner](https://github.com/tonydewan/Carabiner) or [Stuff](https://github.com/dhorrigan/codeigniter-stuff) are supported. Working config files are included for both asset managers, assuming you haven't changed the paths.
 
 ## Configuration
-1. Open up config/formatic.php and configure system paths, image and file upload paths and API keys for the Googlemaps and Recaptcha plugins, if you intend to use them (and note that these are used in the example form).
-2. Open up views/formatic_view_example.php and ensure you are using the correct asset rendering code for your chosen asset manager.
+Open up config/formatic.php and configure system paths, image and file upload paths and API keys for the Googlemaps and Recaptcha plugins, if you intend to use them (and note that these are used in the example form).
 
 ## Usage
 Point your browser to /index.php/formatic_example
