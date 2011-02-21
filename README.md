@@ -1,8 +1,10 @@
 #Formatic
 
-version 1.1.1
+version 1.1.2
 
 * Author: [Mark Croxton](http://hallmark-design.co.uk/)
+* The example application is set up to work with CodeIgniter 2 and CodeIgniter Reactor.
+  For CI 1.x you will need to change the way the example controller and example model extend the core controller and model classes.
 
 
 ## Description
@@ -13,10 +15,10 @@ and associated validation logic. It allows you to render, validate and repopulat
 ## Formatic plugins
 Formatic is extensible via plugins:
 
-Field options: Populates a form control with existing data (for example, from a model function)
-Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
-Field callbacks: Apply a custom validation routine to a form control
-Display widget: Intelligent view partial for the form control value (e.g. render a Googlemap)
+* Field options: Populates a form control with existing data (for example, from a model function)
+* Field types: Renders HTML and includes required assets (CSS and JS) for a custom form control
+* Field callbacks: Apply a custom validation routine to a form control
+* Display widget: Intelligent view partial for the form control value (e.g. render a Googlemap)
 
 Form controls and validation rules are described using configuration files, and groups of fields can be
 tagged for reuse throughout an application. Plugins have global configuration settings which can be
@@ -49,7 +51,10 @@ In addition to the above, file uploads and file validation are available out of 
 5. Install and configure an asset manager: [Carabiner](https://github.com/tonydewan/Carabiner) or [Stuff](https://github.com/dhorrigan/codeigniter-stuff) are supported. Working config files are included for both asset managers, assuming you haven't changed the paths.
 
 ## Configuration
-Open up config/formatic.php and configure system paths, image and file upload paths and API keys for the Googlemaps and Recaptcha plugins etc, if you intend to use them.
+1. Open up config/formatic.php and configure system paths, image and file upload paths and API keys for the Googlemaps and Recaptcha plugins, if you intend to use them (and note that these are used in the example form).
+2. Open up views/formatic_view_example.php and ensure you are using the correct asset rendering code for your chosen asset manager.
 
 ## Usage
-To do.
+Point your browser to /index.php/formatic_example
+
+More to follow.
