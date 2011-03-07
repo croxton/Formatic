@@ -15,7 +15,7 @@ $CI->load->library('form_validation');
  * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
  * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
- * @version 	1.1.5 (7 March 2011)
+ * @version 	1.1.6 (7 March 2011)
  */
 
 class Formatic extends CI_Form_validation {
@@ -181,7 +181,8 @@ class Formatic extends CI_Form_validation {
 			// parse template normally
 			return $this->parser->parse($template, $data, $return);
 		}
-	}	
+	}
+	
 	
 	/**
 	 * Load fields
@@ -470,7 +471,7 @@ class Formatic extends CI_Form_validation {
 	 * @param  string $render return type (string|array|object)
 	 * @return mixed Object or Array.
 	 */
-	public function make_fields($fields=array(), $groups='', $populate=array(), $tpl_row=NULL,  $render = "object")
+	public function make_fields($fields=array(), $groups='', $populate=array(), $tpl_row=NULL,  $render="object")
 	{
 		// use used field array by default
 		if (empty($fields)) $fields = $this->_fields;
@@ -543,17 +544,21 @@ class Formatic extends CI_Form_validation {
 			// the field css id
 			$v['id'] = $field_html[$f]['id'] = isset($v['attr']['id']) ? $v['attr']['id'] : $this->formatic_prefs->css_field_id_prefix.$f;
 			
-			// the field label css id
-			$v['label_id'] = $field_html[$f]['label_id'] = isset($v['attr']['label_id']) ? $v['attr']['label_id'] : $this->formatic_prefs->css_label_id_prefix.$f;
-			
-			// remove '[]' from the css id
+			// remove '[]' from the CSS id
 			if (substr(trim($v['id']), -2) == '[]')
 			{
 				$v['id'] = str_replace('[]','',$v['id']);
 			}
 			
-			// the field row class
-			$field_html[$f]['row_class'] = isset($v['class']) ? $v['class'] : '' ; // field css class
+			// the field row CSS id
+			$v['label_id'] = $field_html[$f]['label_id'] = isset($v['label_id']) ? $v['label_id'] : $this->formatic_prefs->css_label_id_prefix.$f;
+			
+			// the field row class (legacy: support 'class' or 'label_class')
+			$field_html[$f]['row_class'] = isset($v['class']) ? $v['class'] : '';
+			$field_html[$f]['row_class'] = isset($v['label_class']) ? $v['label_class'] : $field_html[$f]['row_class'];
+			
+			// the field row title
+			$field_html[$f]['label_title'] = isset($v['label_title']) ? $v['label_title'] : '';
 			
 			// set default values of fields from config
 			$v['default'] = isset($v['default']) ? $v['default'] : '';
@@ -840,15 +845,15 @@ class Formatic extends CI_Form_validation {
 			if ($tpl !== '')
 			{
 				$field_html[$f]['row'] = $this->render_row(
-					$field_html[$f]['field'], 
-					$tpl, 
-					$v['id'], 
-					$v['label_id'], 
-					$field_html[$f]['label'], 
-					$field_html[$f]['row_class'], 
-					$field_html[$f]['required'],
-					$field_html[$f]['error']
-				);
+					array('field' 		=> $field_html[$f]['field'],
+						'id' 			=> $v['id'], 
+						'label_id'		=> $v['label_id'],
+						'label'			=> $field_html[$f]['label'],
+						'row_class'		=> $field_html[$f]['row_class'],
+						'required'		=> $field_html[$f]['required'],
+						'error'			=> $field_html[$f]['error'],
+						'label_title' 	=> $field_html[$f]['label_title']
+					), $tpl);
 			}
 			
 			// are we rendering the fields or returning an object?
@@ -1002,20 +1007,32 @@ class Formatic extends CI_Form_validation {
 	 * Renders a form row.
 	 *
 	 * @access	public 
-	 * @param string $field The field to render.
-	 * @param string $tpl The HTML to render the field into.
-	 * @param string $id The form element css id.
-	 * @param string $label_id The label element css id.
-	 * @param string $label The form element label text.
-	 * @param string $row_class The row css class.
-	 * @param string $required Required character.
-	 * @return string
+	 * @param 	array 	$vars key => value pairs to replace into template
+	 * @param 	string 	$tpl The HTML to render the field into.
+	 * @return 	string
 	 */
-	public function render_row($field='', $tpl = '', $id='', $label_id='', $label='', $row_class='', $required='', $error='')
+	public function render_row($data = array(), $tpl = '')
 	{
-		$ph = array('{field}', '{id}', '{label_id}', '{label}', '{row_class}', '{required}', '{error}');
-		$row_data = array($field, $id, $label_id, $label, $row_class, $required, $error);
-		return str_replace($ph,$row_data,$tpl)."\n";
+		// default values
+	   $data = $this->_default(
+			array(
+				'field'  		=> '',
+				'id' 	   		=> '', 
+				'label'	   		=> '',
+				'label_id' 		=> '',
+				'label_title'	=> '',
+				'row_class'		=> '',
+				'required'		=> '',
+				'error'			=> ''
+			), $data);
+		
+		// CI 2 only
+		#return $this->parser->parse_string($tpl, $data, TRUE)."\n";
+		foreach($data as $key => $val)
+		{
+			$tpl = str_replace('{'.$key.'}', $val, $tpl);
+		}
+		return $this->cleanup($tpl);
 	}
 
 
@@ -1129,7 +1146,7 @@ class Formatic extends CI_Form_validation {
 		}
 
 		return $this->_field_data[$field]['postdata'];
-	}
+	}	
 	
 	/**
      * get_data
@@ -1626,6 +1643,19 @@ class Formatic extends CI_Form_validation {
 			}	
 		}
     }
+
+   /**
+	* _default method combines the options array with a set of defaults giving the values in the options array priority.
+	*
+    * @access private
+	* @param array $defaults
+	* @param array $options
+	* @return array
+	*/
+	private function _default($defaults, $options)
+	{
+	    return array_merge($defaults, $options);
+	}
 	
 	
 	// --------------------------------------------------------------------
