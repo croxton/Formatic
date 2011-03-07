@@ -3,7 +3,7 @@
 version 1.1.3
 
 * Author: [Mark Croxton](http://hallmark-design.co.uk/)
-* The example application is set up to work with CodeIgniter 2 and CodeIgniter Reactor.
+* The example application is set up to work with CI 2.
   For CI 1.x you will need to change the way the example controller and example model extend the core controller and model classes.
 
 
