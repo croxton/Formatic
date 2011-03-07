@@ -15,7 +15,7 @@ $CI->load->library('form_validation');
  * @license 	MIT Licence (http://opensource.org/licenses/mit-license.php) 
  * @author  	Mark Croxton
  * @copyright  	Mark Croxton, hallmarkdesign (http://www.hallmark-design.co.uk)
- * @version 	1.1.3 (21 February 2010)
+ * @version 	1.1.5 (7 March 2011)
  */
 
 class Formatic extends CI_Form_validation {
@@ -181,8 +181,7 @@ class Formatic extends CI_Form_validation {
 			// parse template normally
 			return $this->parser->parse($template, $data, $return);
 		}
-	}
-	
+	}	
 	
 	/**
 	 * Load fields
@@ -292,7 +291,7 @@ class Formatic extends CI_Form_validation {
 			{
 				$this->load_asset('js', $config['js']); 
 			}
-			if (isset($plugin['css']))
+			if (isset($config['css']))
 			{
 				$this->load_asset('css', $config['css']); 
 			}
@@ -1106,6 +1105,30 @@ class Formatic extends CI_Form_validation {
 				}	
 			}	
 		}
+	}
+	
+	// --------------------------------------------------------------------
+	// Retrieving form data
+	
+	/**
+	 * Get the value from a form
+	 *
+	 * Permits you to repopulate a form field with the value it was submitted
+	 * with, or, if that value doesn't exist, with the default
+	 *
+	 * @access	public
+	 * @param	string	the field name
+	 * @param	string
+	 * @return	mixed
+	 */
+	function set_value($field = '', $default = '')
+	{
+		if ( ! isset($this->_field_data[$field]))
+		{
+			return $default;
+		}
+
+		return $this->_field_data[$field]['postdata'];
 	}
 	
 	/**
